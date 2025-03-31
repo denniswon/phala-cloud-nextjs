@@ -1,4 +1,4 @@
-# Next.js viem dstack Template
+# Next.js viem TEE Simulator Template
 
 ## Requirements
 - [Node](https://nodejs.org/en) >= v18.18
