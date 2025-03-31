@@ -4,30 +4,27 @@ import { privateKeyToAccount } from 'viem/accounts'
 import {
   keccak256,
   http,
-  type Address,
   createPublicClient,
-  PrivateKeyAccount,
-  verifyMessage,
   createWalletClient,
   parseGwei
 } from 'viem'
-import {sepolia} from "viem/chains";
+import {baseSepolia} from "viem/chains";
+import superjson from 'superjson'
 
 const endpoint = process.env.DSTACK_SIMULATOR_ENDPOINT || 'http://localhost:8090'
-
-const publicClient = createPublicClient({
-  chain: sepolia,
-  transport: http(),
-})
-const walletClient = createWalletClient({
-  chain: sepolia,
-  transport: http(),
-})
 
 export const dynamic = 'force-dynamic'
 
 export async function GET() {
   console.log(endpoint)
+  const publicClient = createPublicClient({
+    chain: baseSepolia,
+    transport: http(),
+  })
+  const walletClient = createWalletClient({
+    chain: baseSepolia,
+    transport: http(),
+  })
   const client = new TappdClient(endpoint)
   const testDeriveKey = await client.deriveKey("/", "test");
   const keccakPrivateKey = keccak256(testDeriveKey.asUint8Array());
@@ -57,6 +54,7 @@ export async function GET() {
   } catch (e) {
     return Response.json({error: e})
   }
+  const { json: jsonResult , meta } = superjson.serialize(result)
 
-  return Response.json({ result });
+  return Response.json({ jsonResult });
 }
