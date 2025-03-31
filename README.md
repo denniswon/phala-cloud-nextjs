@@ -22,7 +22,7 @@ yarn
 cp env.local.example .env.local
 ```
 
-We also need to download the DStack simulator:
+If not running on Intel TDX, you need to also download the DStack simulator:
 
 ```shell
 # Mac
