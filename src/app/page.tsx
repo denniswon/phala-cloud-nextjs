@@ -1,7 +1,23 @@
+// src/app/page.tsx
+"use client";
 import Image from "next/image";
 import styles from "./page.module.css";
+import 'dotenv/config'
 
 export default function Home() {
+
+  // Define the function to be called on button click
+  const handleClick = async (path: string) => {
+    try {
+      const response = await fetch(path);
+      const data = await response.json();
+      console.log(JSON.stringify(data))
+      alert(JSON.stringify(data));
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -15,40 +31,30 @@ export default function Home() {
         />
         <ol>
           <li>
-            Get started by editing <code>src/app/page.tsx</code>.
+            Generate a Remote Attestation.
           </li>
-          <li>Save and see your changes instantly.</li>
+          <li>Derive a Key.</li>
+          <li>Get Last Block.</li>
         </ol>
 
         <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
+          <a className={styles.primary} target="_blank"
+             rel="noopener noreferrer" onClick={() => handleClick('/api/remoteAttestation')}>
+            Remote Attestation
           </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
+          <a className={styles.secondary} target="_blank"
+             rel="noopener noreferrer" onClick={() => handleClick('/api/deriveKey')}>
+            Derive Key
+          </a>
+          <a className={styles.primary} target="_blank"
+             rel="noopener noreferrer" onClick={() => handleClick('/api/getLastBlock')}>
+            Last Block
           </a>
         </div>
       </main>
       <footer className={styles.footer}>
         <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+          href="https://bit.ly/dstack-cheat-sheet"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -62,7 +68,7 @@ export default function Home() {
           Learn
         </a>
         <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+          href="https://docs.phala.network/references/hackathon-guides/ethglobal-sf-hackathon-guide"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -73,10 +79,10 @@ export default function Home() {
             width={16}
             height={16}
           />
-          Examples
+          Guide
         </a>
         <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+          href="https://github.com/Phala-Network/nextjs-viem-dstack-template"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -87,7 +93,7 @@ export default function Home() {
             width={16}
             height={16}
           />
-          Go to nextjs.org →
+          Go to Code →
         </a>
       </footer>
     </div>
