@@ -1,6 +1,6 @@
-# Phala Cloud Next.js Starter
+# Phala Cloud Next.js Demo
 
-This is a template for developing a [Next.js](https://nextjs.org/)-based app with boilerplate code targeting deployment on [Phala Cloud](https://cloud.phala.network/) and [DStack](https://github.com/dstack-TEE/dstack/). It includes the SDK by default to make integration with TEE features easier. This repo also includes a default Dockerfile and docker-compose.yml for deployment.
+A [Next.js](https://nextjs.org/)-based demo targeting deployment on [Phala Cloud](https://cloud.phala.network/) and [DStack](https://github.com/dstack-TEE/dstack/).
 
 ## Requirements
 - [Node](https://nodejs.org/en) >= v18.18
@@ -12,7 +12,7 @@ This is a template for developing a [Next.js](https://nextjs.org/)-based app wit
 First, you need to clone this repo:
 
 ```shell
-git clone --depth 1 https://github.com/Phala-Network/phala-cloud-nextjs-starter.git
+git clone --depth 1 https://github.com/denniswon/phala-cloud-nextjs.git
 ```
 
 Next, let's initialize the development environment:
@@ -59,8 +59,8 @@ This repo also includes code snippets for the following common use cases:
 You need to build the image and push it to DockerHub for deployment. The following instructions are for publishing to a public registry via DockerHub:
 
 ```shell
-sudo docker build . -t leechael/phala-cloud-nextjs-starter
-sudo docker push leechael/phala-cloud-nextjs-starter
+sudo docker build . -t jhwon0820/phala-cloud-nextjs
+sudo docker push jhwon0820/phala-cloud-nextjs
 ```
 
 ## Deploy
