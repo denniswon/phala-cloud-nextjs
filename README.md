@@ -1,8 +1,8 @@
 # Next.js viem dstack Template
 
 ## Requirements
-- Node >= v18.18
-- yarn
+- [Node](https://nodejs.org/en) >= v18.18
+- [yarn](https://yarnpkg.com/)
 - Docker or Orbstack
 
 ## Getting Started
