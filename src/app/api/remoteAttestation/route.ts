@@ -1,9 +1,10 @@
 import {TappdClient} from '@phala/dstack-sdk'
 import 'dotenv/config'
 
+export const dynamic = 'force-dynamic'
+
 const endpoint = process.env.DSTACK_SIMULATOR_ENDPOINT || 'http://localhost:8090'
 
-export const dynamic = 'force-dynamic'
 export async function GET() {
   console.log(endpoint)
   const client = new TappdClient(endpoint)
