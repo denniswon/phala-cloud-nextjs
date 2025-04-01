@@ -1,5 +1,6 @@
 version: '3'
 services:
+    # TTYD service for logging into the CVM
     alpine-ttypd:
         build: .
         image: hackinglab/alpine-ttyd-bash:3.2
@@ -12,6 +13,31 @@ services:
         volumes:
         - /:/host
         network_mode: host
+
+    services:
+    # Setup service to initialize user data for private log viewer
+    setup:
+      image: busybox
+      restart: "no"
+      volumes:
+        - dozzle-data:/dozzle-data/
+      command: >
+        sh -c 'echo "use authority token" | base64 -d > /dozzle-data/users.yml || true'
+
+    # Dozzle log viewer service
+    dozzle:
+      container_name: dozzle
+      image: amir20/dozzle:latest
+      depends_on:
+        - setup
+      environment:
+        - DOZZLE_AUTH_PROVIDER=simple
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+        - dozzle-data:/data/
+      ports:
+        - 8080:8080
+
     app:
         image: jhwon0820/phala-js:1.0.2
         container_name: app
