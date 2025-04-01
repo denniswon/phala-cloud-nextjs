@@ -1,1 +1,5 @@
 .env
+.env.local
+tappd*
+app.crt
+app.key
