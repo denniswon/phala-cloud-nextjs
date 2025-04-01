@@ -50,7 +50,8 @@ This repo also includes code snippets for the following common use cases:
 
 - `/api/tdx_quote`: The `reportdata` is `test` and generates the quote for attestation report via `tdxQuote` API.
 - `/api/tdx_quote_raw`: The `reportdata` is `Hello DStack!` and generates the quote for attestation report. The difference from `/api/dx_quote` is that you can see the raw text `Hello DStack!` in [Attestation Explorer](https://proof.t16z.com/).
-- `/api/account/address`: Using the `deriveKey` API to generate a deterministic wallet for Ethereum or Solana, a.k.a. a wallet held by the TEE instance.
+- `/api/account/ethereum`: Using the `deriveKey` API to generate a deterministic wallet for Ethereum, a.k.a. a wallet held by the TEE instance.
+- `/api/account/solana`: Using the `deriveKey` API to generate a deterministic wallet for Solana, a.k.a. a wallet held by the TEE instance.
 - `/api/info`: Returns the TCB Info of the hosted CVM.
 
 ## Build

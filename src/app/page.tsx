@@ -132,10 +132,24 @@ export default function Home() {
     }
   }, [ethSeed, solSeed]);
 
+  const [chain, setChain] = useState<'ethereum' | 'solana'>('ethereum');
+
   return (
     <div className={styles.page}>
       <main className={styles.main}>
         <div className={styles.ctas} style={{ display: 'flex', flexDirection: 'column' }}>
+        
+        <div style={{ gap: '24px', display: 'flex', flexDirection: 'row', padding: '8px', alignItems: 'center', justifyContent: 'center' }}>
+          <div>
+            <input id="default-radio-1" type="radio" value="ethereum" name="default-radio" style={{ marginRight: '4px' }} />
+            <label htmlFor="default-radio-1" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Ethereum</label>
+          </div>
+          <div>
+            <input checked id="default-radio-2" type="radio" value="solana" name="default-radio" style={{ marginRight: '4px' }} />
+            <label htmlFor="default-radio-2" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Solana</label>
+          </div>
+        </div>
+
         <a className={styles.primary} target="_blank"
              rel="noopener noreferrer" onClick={() => handleClick('/api/tdx_quote_raw')}>
             Remote Attestation
