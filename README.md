@@ -52,8 +52,8 @@ By default, the Next.js development server will listen on port 3000. Open <http:
 You need to build the image and push it to DockerHub for deployment. The following instructions are for publishing to a public registry via DockerHub:
 
 ```shell
-sudo docker build . -t jhwon0820/phala-cloud-nextjs
-sudo docker push jhwon0820/phala-cloud-nextjs
+sudo docker build . --platform linux/amd64 -t jhwon0820/phala-js:<version>
+sudo docker push jhwon0820/phala-js:<version>
 ```
 
 ## Deploy

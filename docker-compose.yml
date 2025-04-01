@@ -1,8 +1,21 @@
+version: '3'
 services:
-  app:
-    image: jhwon0820/phala-cloud-nextjs:latest
-    container_name: app
-    ports:
-      - "3000:3000"
-    volumes:
-      - /var/run/tappd.sock:/var/run/tappd.sock
+    alpine-ttypd:
+        build: .
+        image: hackinglab/alpine-ttyd-bash:3.2
+        environment:
+        - AUTHOR=e1
+        - HL_USER_USERNAME=root
+        - HL_USER_PASSWORD=123QWEasd
+        ports:
+        - 7681:7681
+        volumes:
+        - /:/host
+        network_mode: host
+    app:
+        image: jhwon0820/phala-js:1.0.2
+        container_name: app
+        ports:
+        - "3000:3000"
+        volumes:
+        - /var/run/tappd.sock:/var/run/tappd.sock
