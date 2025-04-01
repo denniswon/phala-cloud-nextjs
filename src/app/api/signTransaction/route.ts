@@ -9,10 +9,23 @@ import {
 } from 'viem'
 import {baseSepolia} from "viem/chains";
 import superjson from 'superjson'
+import { Keypair } from '@solana/web3.js';
+import { privateKeyToAddress, generatePrivateKey } from 'viem/accounts';
 
 export const dynamic = 'force-dynamic'
 
-export async function GET() {
+export async function POST(request: Request) {
+  const res = await request.json()
+  let key = res.key;
+  const useSol = !!res.useSol;
+  if (!key) {
+    if (useSol) {
+      const keypair = Keypair.generate();
+      key = keypair.publicKey.toBase58()
+    } else {
+      key = privateKeyToAddress(generatePrivateKey())
+    }
+  }
   const publicClient = createPublicClient({
     chain: baseSepolia,
     transport: http(),
@@ -22,8 +35,8 @@ export async function GET() {
     transport: http(),
   })
   const client = new TappdClient()
-  const testDeriveKey = await client.deriveKey("ethereum");
-  const account = toViemAccount(testDeriveKey);
+  const deriveKey = await client.deriveKey(key);
+  const account = toViemAccount(deriveKey);
   const to = '0xC5227Cb20493b97bb02fADb20360fe28F52E2eff';
   const gweiAmount = 420;
   let result = {

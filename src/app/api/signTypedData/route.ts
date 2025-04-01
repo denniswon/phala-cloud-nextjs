@@ -1,5 +1,7 @@
 import { TappdClient } from '@phala/dstack-sdk'
 import { toViemAccount } from '@phala/dstack-sdk/viem'
+import { Keypair } from '@solana/web3.js'
+import { privateKeyToAddress, generatePrivateKey } from 'viem/accounts'
 
 const domain = {
   name: 'Ether Mail',
@@ -22,7 +24,18 @@ const types = {
 
 export const dynamic = 'force-dynamic'
 
-export async function GET() {
+export async function POST(request: Request) {
+  const res = await request.json()
+  let key = res.key;
+  const useSol = !!res.useSol;
+  if (!key) {
+    if (useSol) {
+      const keypair = Keypair.generate();
+      key = keypair.publicKey.toBase58()
+    } else {
+      key = privateKeyToAddress(generatePrivateKey())
+    }
+  }
   const message = {
     from: {
       name: 'Cow',
@@ -35,8 +48,8 @@ export async function GET() {
     contents: 'Hello, t/acc!',
   };
   const client = new TappdClient()
-  const testDeriveKey = await client.deriveKey("ethereum");
-  const account = toViemAccount(testDeriveKey);
+  const deriveKey = await client.deriveKey(key);
+  const account = toViemAccount(deriveKey);
   console.log(`Account [${account.address}] Signing Typed Message [${message}]`);
   const signature = await account.signTypedData({
     // @ts-ignore

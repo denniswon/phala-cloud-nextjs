@@ -3,7 +3,7 @@
 
 import Image from "next/image";
 import styles from "./page.module.css";
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import FormData from 'form-data';
 
 function hexToUint8Array(hex: string) {
@@ -52,12 +52,31 @@ async function uploadUint8Array(data: Uint8Array) {
 export default function Home() {
   const [result, setResult] = useState<string | null>(null);
 
+  const [ethSeed, setEthSeed] = useState('');
+  const [solSeed, setSolSeed] = useState('');
+  const useSol = useMemo(() => {
+    return solSeed !== '';
+  }, [solSeed]);
+
   // Define the function to be called on button click
-  const handleClick = async (path: string) => {
+  const handleClick = useCallback(async (path: string, params?: any) => {
     try {
       let response, data;
+      if (path === '/api/account/address') {
+        const addressData = { key: ethSeed || solSeed, useSol: !!solSeed || params?.useSol };
+        response = await fetch(path, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(addressData),
+        });
+        data = await response.json();
+        console.log(JSON.stringify(data));
+        setResult(JSON.stringify(data, null, 2)); // Pretty print JSON
+      }
       if (path === '/api/signMessage') {
-        const messageData = { message: "t/acc" };
+        const messageData = { message: "t/acc", key: ethSeed || solSeed, useSol };
         response = await fetch(path, {
           method: 'POST',
           headers: {
@@ -69,7 +88,13 @@ export default function Home() {
         console.log(JSON.stringify(data));
         setResult(JSON.stringify(data, null, 2)); // Pretty print JSON
       } else {
-        response = await fetch(path);
+        response = await fetch(path, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ key: ethSeed || solSeed, useSol }),
+        });
         data = await response.json();
         console.log(JSON.stringify(data));
         if (path === '/api/tdx_quote_raw') {
@@ -88,38 +113,35 @@ export default function Home() {
       console.error('Error:', error);
       setResult('Error: ' + error);
     }
-  };
+  }, [ethSeed, solSeed]);
 
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="https://phala.network/logo.svg"
-          alt="Phala logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Generate a Remote Attestation.
-          </li>
-          <li>Get TEE Account.</li>
-          <li>Test Signing Capabilities.</li>
-        </ol>
-        <div className={styles.ctas}>
-          <a className={styles.primary} target="_blank"
+        <div className={styles.ctas} style={{ display: 'flex', flexDirection: 'column' }}>
+        <a className={styles.primary} target="_blank"
              rel="noopener noreferrer" onClick={() => handleClick('/api/tdx_quote_raw')}>
             Remote Attestation
           </a>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <input type="text" style={{ width: '50%', padding: '8px', borderRadius: '16px', border: '1px solid #ccc' }}
+              placeholder="seed key for account" value={ethSeed} onChange={(e) => { setEthSeed(e.target.value); setSolSeed('') }} />
+            <a className={styles.primary} target="_blank" style={{ flex: 1 }}
+               rel="noopener noreferrer" onClick={() => handleClick(`/api/account/address`)}>
+              TEE Account (Ethereum)
+            </a>
+          </div>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <input type="text" style={{ width: '50%', padding: '8px', borderRadius: '16px', border: '1px solid #ccc' }}
+              placeholder="seed key for account" value={solSeed} onChange={(e) => { setSolSeed(e.target.value); setEthSeed('') }} />
+            <a className={styles.primary} target="_blank" style={{ flex: 1 }}
+               rel="noopener noreferrer" onClick={() => handleClick(`/api/account/address`, { useSol: true }) }>
+              TEE Account (Solana)
+            </a>
+          </div>
           <a className={styles.primary} target="_blank"
-             rel="noopener noreferrer" onClick={() => handleClick('/api/eth_account/address')}>
-            TEE Account: Ethereum Address
-          </a>
-          <a className={styles.primary} target="_blank"
-             rel="noopener noreferrer" onClick={() => handleClick('/api/solana_account/address')}>
-            TEE Account: Solana Address
+             rel="noopener noreferrer" onClick={() => handleClick('/api/info')}>
+            TEE Info
           </a>
         </div>
 
@@ -137,28 +159,11 @@ export default function Home() {
             Sign Transaction
           </a>
         </div>
+        <div className={styles.resultBox}>
+          <h3>Result:</h3>
+          <pre>{result}</pre>
+        </div>
       </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://www.npmjs.com/package/@phala/dstack-sdk"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          SDK Docs →
-        </a>
-        <a
-          href="https://github.com/phala-Network/phala-cloud-nextjs-starter"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Go to Code →
-        </a>
-      </footer>
-      <div className={styles.resultBox}>
-        <h3>Result:</h3>
-        <pre>{result}</pre>
-      </div>
     </div>
   );
 }

@@ -32,6 +32,8 @@
   flex-direction: column;
   gap: 32px;
   grid-row-start: 2;
+  overflow-y: auto;
+  height: 100%;
 }
 
 .main ol {
@@ -166,13 +168,12 @@ a.secondary {
 }
 
 .resultBox {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  max-height: 120px;
+  margin: auto;
+  width: 100%;
+  max-width: 800px;
+  height: 360px;
   overflow-y: auto;
-  border-top: 2px solid #ccc;
+  border: 2px solid #ccc;
   background-color: var(--background);
   padding: 10px;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
