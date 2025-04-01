@@ -3,19 +3,20 @@
 A [Next.js](https://nextjs.org/)-based demo targeting deployment on [Phala Cloud](https://cloud.phala.network/) and [DStack](https://github.com/dstack-TEE/dstack/).
 
 ## Requirements
+
 - [Node](https://nodejs.org/en) >= v18.18
 - [yarn](https://yarnpkg.com/)
-- Docker or Orbstack
+- [Docker](https://www.docker.com/)
 
 ## Development
 
-First, you need to clone this repo:
+Clone this repo:
 
 ```shell
 git clone --depth 1 https://github.com/denniswon/phala-cloud-nextjs.git
 ```
 
-Next, let's initialize the development environment:
+Initialize the development environment:
 
 ```shell
 yarn
@@ -44,15 +45,7 @@ Once the simulator is running, you need to open another terminal to start your N
 yarn dev
 ```
 
-By default, the Next.js development server will listen on port 3000. Open http://127.0.0.1:3000/ in your browser and check.
-
-This repo also includes code snippets for the following common use cases:
-
-- `/api/tdx_quote`: The `reportdata` is `test` and generates the quote for attestation report via `tdxQuote` API.
-- `/api/tdx_quote_raw`: The `reportdata` is `Hello DStack!` and generates the quote for attestation report. The difference from `/api/dx_quote` is that you can see the raw text `Hello DStack!` in [Attestation Explorer](https://proof.t16z.com/).
-- `/api/account/ethereum`: Using the `deriveKey` API to generate a deterministic wallet for Ethereum, a.k.a. a wallet held by the TEE instance.
-- `/api/account/solana`: Using the `deriveKey` API to generate a deterministic wallet for Solana, a.k.a. a wallet held by the TEE instance.
-- `/api/info`: Returns the TCB Info of the hosted CVM.
+By default, the Next.js development server will listen on port 3000. Open <http://127.0.0.1:3000/> in your browser and check.
 
 ## Build
 
