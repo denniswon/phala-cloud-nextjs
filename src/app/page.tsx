@@ -54,16 +54,18 @@ export default function Home() {
 
   const [ethSeed, setEthSeed] = useState('');
   const [solSeed, setSolSeed] = useState('');
+  const [_useSol, setUseSol] = useState(false);
   const useSol = useMemo(() => {
-    return solSeed !== '';
-  }, [solSeed]);
+    return _useSol || solSeed !== '';
+  }, [solSeed, _useSol]);
 
   // Define the function to be called on button click
-  const handleClick = useCallback(async (path: string, params?: any) => {
+  const handleClick = useCallback(async (path: string) => {
     try {
       let response, data;
-      if (path === '/api/account/address') {
-        const addressData = { key: ethSeed || solSeed, useSol: !!solSeed || params?.useSol };
+      if (path === '/api/account/ethereum') {
+        setUseSol(false);
+        const addressData = { key: ethSeed };
         response = await fetch(path, {
           method: 'POST',
           headers: {
@@ -74,9 +76,22 @@ export default function Home() {
         data = await response.json();
         console.log(JSON.stringify(data));
         setResult(JSON.stringify(data, null, 2)); // Pretty print JSON
-      }
-      if (path === '/api/signMessage') {
+      } else if (path === '/api/account/solana') {
+        setUseSol(true);
+        const addressData = { key: solSeed };
+        response = await fetch(path, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(addressData),
+        });
+        data = await response.json();
+        console.log(JSON.stringify(data));
+        setResult(JSON.stringify(data, null, 2)); // Pretty print JSON
+      } else if (path === '/api/signMessage') {
         const messageData = { message: "t/acc", key: ethSeed || solSeed, useSol };
+        console.log('Signing message...', messageData);
         response = await fetch(path, {
           method: 'POST',
           headers: {
@@ -88,6 +103,7 @@ export default function Home() {
         console.log(JSON.stringify(data));
         setResult(JSON.stringify(data, null, 2)); // Pretty print JSON
       } else {
+        console.log(path, { key: ethSeed || solSeed, useSol });
         response = await fetch(path, {
           method: 'POST',
           headers: {
@@ -98,6 +114,7 @@ export default function Home() {
         data = await response.json();
         console.log(JSON.stringify(data));
         if (path === '/api/tdx_quote_raw') {
+          console.log('Uploading Attestation...');
           const remoteAttestionQuoteHex = data.quote;
           console.log(remoteAttestionQuoteHex);
           const remoteAttestationQuoteU8Array = hexToUint8Array(remoteAttestionQuoteHex);
@@ -127,7 +144,7 @@ export default function Home() {
             <input type="text" style={{ width: '50%', padding: '8px', borderRadius: '16px', border: '1px solid #ccc' }}
               placeholder="seed key for account" value={ethSeed} onChange={(e) => { setEthSeed(e.target.value); setSolSeed('') }} />
             <a className={styles.primary} target="_blank" style={{ flex: 1 }}
-               rel="noopener noreferrer" onClick={() => handleClick(`/api/account/address`)}>
+               rel="noopener noreferrer" onClick={() => handleClick(`/api/account/ethereum`)}>
               TEE Account (Ethereum)
             </a>
           </div>
@@ -135,7 +152,7 @@ export default function Home() {
             <input type="text" style={{ width: '50%', padding: '8px', borderRadius: '16px', border: '1px solid #ccc' }}
               placeholder="seed key for account" value={solSeed} onChange={(e) => { setSolSeed(e.target.value); setEthSeed('') }} />
             <a className={styles.primary} target="_blank" style={{ flex: 1 }}
-               rel="noopener noreferrer" onClick={() => handleClick(`/api/account/address`, { useSol: true }) }>
+               rel="noopener noreferrer" onClick={() => handleClick(`/api/account/solana`) }>
               TEE Account (Solana)
             </a>
           </div>

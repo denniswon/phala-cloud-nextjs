@@ -18,6 +18,7 @@ export async function POST(request: Request) {
   const res = await request.json()
   let key = res.key;
   const useSol = !!res.useSol;
+  console.log('sign transaction:', res);
   if (!key) {
     if (useSol) {
       const keypair = Keypair.generate();
