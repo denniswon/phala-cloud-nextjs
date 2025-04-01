@@ -38,14 +38,15 @@ async function uploadUint8Array(data: Uint8Array) {
   const formData = new FormData();
   formData.append('file', file);
 
-  const result = await fetch('https://proof.t16z.com/api/upload', {
+  const result = await fetch('/dstack/api/upload', {
     method: 'POST',
     // @ts-ignore
     body: formData,
     mode: 'no-cors',
   });
-  console.log(result);
-  return result;
+  const ret = await result.json();
+  console.log(ret);
+  return ret;
 }
 
 export default function Home() {
@@ -53,6 +54,7 @@ export default function Home() {
 
   const [chain, setChain] = useState<'ethereum' | 'solana'>('ethereum');
   const [seed, setSeed] = useState('');
+  const [quoteLink, setQuoteLink] = useState<string | null>(null);
 
   // Define the function to be called on button click
   const handleClick = useCallback(
@@ -78,6 +80,7 @@ export default function Home() {
         console.log(JSON.stringify(data));
 
         if (path === '/api/tdx_quote_raw') {
+          setQuoteLink(null);
           console.log('Uploading Attestation...');
           const remoteAttestionQuoteHex = data.quote;
           console.log(remoteAttestionQuoteHex);
@@ -89,8 +92,8 @@ export default function Home() {
           const uploadResult = await uploadUint8Array(
             remoteAttestationQuoteU8Array
           );
-          console.log(uploadResult);
-          console.log('Upload Complete...');
+          console.log('Upload Complete...', uploadResult);
+          setQuoteLink(uploadResult.url);
         }
 
         setResult(JSON.stringify(data, null, 2)); // Pretty print JSON
@@ -231,7 +234,11 @@ export default function Home() {
           </a>
         </div>
         <div className={styles.resultBox}>
-          <h3>Result:</h3>
+          <h4>Result:</h4>
+          {!!quoteLink && (
+            <a href={quoteLink} target="_blank" rel="noopener noreferrer"
+              style={{ marginTop: '16px', marginBottom: '16px', fontSize: 'small' }}>Explorer</a>
+          )}
           <pre>{result}</pre>
         </div>
       </main>

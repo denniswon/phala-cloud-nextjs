@@ -185,6 +185,34 @@ a.secondary {
   z-index: 1000;
 }
 
+.resultBox a {
+  color: #0077cc;             /* Link color */
+  text-decoration: none;      /* Remove underline */
+  transition: all 0.3s ease;  /* Smooth transition for hover effects */
+}
+
+/* Hover state */
+.resultBox a:hover {
+  color: #004499;             /* Darker color on hover */
+  text-decoration: underline; /* Add underline on hover */
+}
+
+/* Visited links */
+.resultBox a:visited {
+  color: #551A8B;             /* Traditional visited link color */
+}
+
+/* Active state (when clicking) */
+.resultBox a:active {
+  color: #ff0000;             /* Color when clicked */
+}
+
+/* Focus state (for accessibility) */
+.resultBox a:focus {
+  outline: 2px solid #0077cc; /* Outline for keyboard navigation */
+  outline-offset: 2px;
+}
+
 .resultBox h3 {
   margin: 0 0 10px 0;
 }
